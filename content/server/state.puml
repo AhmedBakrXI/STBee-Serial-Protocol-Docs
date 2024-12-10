@@ -1,0 +1,33 @@
+@startuml "Server State Diagram"
+
+title "Server State Diagram"
+
+left to right direction
+
+state idle as "Idle"
+state receiveCommand as "Receive Command"
+state processCommand as "Process Command"
+state sendResponse as "Send Response"
+state badCommand as "Bad Command"
+state timeout as "Timeout"
+state commandReceived as "Command Processed"
+state waitAck as "Wait for Acknowledge"
+
+[*] --> idle
+idle --> receiveCommand: Wait for Command
+receiveCommand --> processCommand: Done Receiving
+receiveCommand --> receiveCommand: Receive Multiple Commands
+receiveCommand --> idle: No Commands to Process
+
+processCommand --> sendResponse: Command Processed
+processCommand --> badCommand: Error in Command
+
+badCommand --> receiveCommand: Send Bad Command
+
+sendResponse --> commandReceived: Command Sent Successfully
+commandReceived --> waitAck: Wait for ACK
+waitAck --> processCommand: Acknowledge Received
+waitAck --> timeout: ACK Timeout
+timeout --> receiveCommand: Resend Response
+
+@enduml

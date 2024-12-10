@@ -1,0 +1,32 @@
+@startuml "Client State Diagram"
+
+title "Client State Diagram"
+
+left to right direction
+
+state idle as "Idle"
+state sendCommands as "Send Commands"
+state waitResp as "Waiting for Responses"
+state processResp as "Process Response"
+state badResp as "Bad Response"
+state goodResp as "Good Response"
+state timeout as "Timeout"
+state resendCommand as "Resend Command"
+
+[*] --> idle
+idle --> sendCommands: Send Commands
+sendCommands --> sendCommands: Send Next Command
+sendCommands --> waitResp: Done Sending Commands
+
+waitResp --> processResp: Receive Response
+processResp --> badResp: Error in Response
+processResp --> goodResp: Received & Parsed Correctly
+
+goodResp --> sendCommands: Send OK + Command ID
+badResp --> waitResp: Resend Command
+timeout --> resendCommand: Resend Command
+resendCommand --> waitResp: Command Resent
+
+goodResp --> idle: Done Handling All Responses
+
+@enduml
