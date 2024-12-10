@@ -1,0 +1,27 @@
+@startuml "Multiple Commands"
+
+title "Multiple Commands CLIENT_SERVER ALL SUCCESS"
+participant client
+participant server
+
+client -> server: Request [ID=01, PRIORITY=APP, COMMAND]
+client -> server: Request [ID=02, PRIORITY=USER, COMMAND]
+client -> server: Request [ID=03, PRIORITY=APP, COMMAND]
+
+server -> server: Process [ID=02, PRIORITY=USER, COMMAND]
+server -> client: Send [ID=02, Response]
+client -> client: Process Response
+
+server -> server: Process [ID=03, PRIORITY=APP, COMMAND]
+server -> client: Send [ID=03, Response]
+client -> client: Process Response
+
+client -> server: OK 02
+client -> server: OK 03
+
+server -> server: Process [ID=01, PRIORITY=APP, COMMAND]
+server -> client: Send [ID=01, Response]
+client -> client: Process Response
+client -> server: OK 01
+
+@enduml

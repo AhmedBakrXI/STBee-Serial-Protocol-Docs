@@ -1,0 +1,25 @@
+@startuml "Single Commands"
+
+title "Single Command CLIENT_SERVER Corrupted Command"
+!pragma teoz true
+
+participant client
+participant server
+
+client -> server: Request [ID=01, PRIORITY=APP, COMMAND]
+
+server -> server: Process [ID=0X, Corrupted]
+server -> client: Send [ID=0X, Corrupted or Not Supported Command]
+client -> client: Process Response
+
+alt x is a valid id i.e x = 01
+    client -> server: Resend [ID=01, PRIORITY=APP, COMMAND]
+    server -> client: Resend [ID=01, Response]
+    client -> server: OK ID=01
+else x isn't valid
+    note over client, server
+        Wait for timeout and execute timeout mechanism.
+    end note
+end
+
+@enduml

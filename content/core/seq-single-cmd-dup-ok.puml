@@ -1,0 +1,18 @@
+@startuml "Single Commands"
+
+title "Single Command CLIENT_SERVER Dup Ack"
+!pragma teoz true
+
+participant client
+participant server
+
+client -> server: Request [ID=01, PRIORITY=APP, COMMAND]
+
+server -> server: Process [ID=01, PRIORITY=USER, COMMAND]
+server -> client: Send [ID=01, Response]
+client -> client: Process Response
+client -> server: OK ID=01
+client -> server: OK ID=01
+server -> server: Discard Dup OK
+
+@enduml

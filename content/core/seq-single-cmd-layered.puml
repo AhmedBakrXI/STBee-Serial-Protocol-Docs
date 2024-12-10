@@ -1,0 +1,62 @@
+@startuml "Single Command Execution - Success Case"
+title "Single Command Execution - Success Case"
+!pragma teoz true
+
+entity client_cmd as "Client Command Layer"
+entity client_dtl as "Client Data Transfer Layer"
+entity client_phy as "Client Physical Layer"
+
+
+entity server_phy as "Client Physical Layer"
+entity server_dtl as "Client Data Transfer Layer"
+entity server_cmd as "Client Command Layer"
+
+
+client_cmd -> client_dtl: Send Command + Command ID + Priority
+{start_timer} client_cmd -> client_cmd: Start Timeout Timer
+
+
+client_dtl -> client_dtl: Encapsulate Message Using SLIP
+client_dtl -> client_phy: Send Encapsulated Message
+client_phy -> server_phy: Send Byte
+client_phy -> server_phy: Send Byte
+client_phy -> server_phy: .... ....
+
+server_phy -> server_dtl: Notify on Receiving Octet
+
+alt#Gold #LightBlue end of slip packet
+    server_dtl -> server_cmd: Unwrap Message and send to command layer
+else #Pink not end
+    server_dtl -> server_dtl: wait for other octets 
+end
+
+server_cmd -> server_cmd: Execute the process
+server_cmd -> server_dtl: send response
+server_dtl -> server_dtl: Encapsulate Message Using SLIP
+server_dtl -> server_phy: Send Encapsulated Message
+
+server_phy -> client_phy: Send Byte
+server_phy -> client_phy: Send Byte
+server_phy -> client_phy: .... ....
+
+client_phy -> client_dtl: Notify on Receiving Octet
+
+alt#Gold #LightBlue end of slip packet
+    client_dtl -> client_cmd: Unwrap Message and send to command layer
+else #Pink not end
+    client_dtl -> client_dtl: wait for other octets 
+end
+
+{end_timer} client_cmd -> client_cmd: Timer End
+client_cmd -> client_cmd: Stop Timer
+client_cmd -> client_cmd: Parse Response to DTO
+
+alt#Gold #LightBlue Successful Parsing
+    client_cmd --> server_cmd: Send ACK + Command ID
+else #Pink Failure
+    client_cmd --> server_cmd: Send RESEND + Command ID
+end
+
+{start_timer} <-> {end_timer}: Ticking
+
+@enduml

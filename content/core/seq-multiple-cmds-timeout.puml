@@ -1,0 +1,35 @@
+@startuml "Multiple Commands"
+
+title "Multiple Commands CLIENT_SERVER TIMEOUT"
+!pragma teoz true
+
+participant client
+participant server
+
+{start1} client -> server: Request [ID=01, PRIORITY=APP, COMMAND]
+{start2} client -> server: Request [ID=02, PRIORITY=USER, COMMAND]
+{start3} client -> server: Request [ID=03, PRIORITY=APP, COMMAND]
+
+server -> server: Process [ID=02, PRIORITY=USER, COMMAND]
+server -> client: Send [ID=02, Response]
+client -> client: Process Response
+
+server -> server: Process [ID=03, PRIORITY=APP, COMMAND]
+server -> client: Send [ID=03, Response]
+client -> client: Process Response
+
+{end2} client -> server: OK 02
+{end3} client -> server: OK 03
+
+server -> server: Process [ID=01, PRIORITY=APP, COMMAND]
+
+{start4} client -[#blue]-> client: Timeout ID=01
+client -> server: RESEND ID=01
+
+{end4} server -> client: Send [ID=01, Response]
+
+{start1} -[#blue]-> {start4}: timer 1
+{start2} <-> {end2}: timer 2
+{start3} <-> {end3}: timer 3
+{start4} <-> {end4}: timer 1
+@enduml
