@@ -34,20 +34,23 @@ The following figure outlines the command format which is used for communication
 This field contains a unique 8-bit integer used to identify each CRA session in order to allow handling multiple requests at same time and this allows handling up to 256 request at same time.
 
 ### 2.2.2 Reserved
-This field contains 5-bits that are reserved for future uses and can be used as flags if needed.
+This field contains 4-bits that are reserved for future uses and can be used as flags if needed.
 
 ### 2.2.3 Acknowledge Flag (AF)
 This flag is used to distinguish between commands and acknowledge frames. It's set to zero if command and one otherwise.
 
-### 2.2.4 Priority
+### 2.2.4 Device or Network (DEV/NWK)
+This flag is used to distinguish between device and network commands.
+Zero for device commands and one otherwise.
+
+### 2.2.5 Priority
 Contains two bits to support four levels of priority. Server should handle higher priority commands before lower ones.
 
-### 2.2.5 Command
+### 2.2.6 Command
 This field contains 8 bits to support up to 256 commands.
 
-### 2.2.6 Payload
+### 2.2.7 Payload
 This field contains any parameters sent by application layer and has maximum size of 300 bytes.
-
 
 # 2.3 Response Format
 The following figure outlines the response format which is used for communication purposes. 
@@ -67,6 +70,10 @@ This field contains the response to the command sent.
 
 
 ## 2.4 Diagrams
+
+## 2.5 Entities
+<img src="images/command-entities.png">
+
 
 `حط الصور يااااااااااض يا أبو حياة`
 
@@ -98,5 +105,89 @@ Optional 16-bits for CRC calculation.
 
 ### 3.1.5 SLIP Wrapper
 This is used to wrap the packet before sending it to physical layer, this is important to determine the begin and end of the packet.
+
+## 3.2 Entities
+<img src="images/dtl-entities.png">
+
+# 4. Physical Layer
+This layer is responsible for sending packets over the physical wire using UART communication protocol.
+
+Specifications:
+- Baud Rate: 115200 bps
+- One Stop Bit
+- No Parity
+- Data Bits: 8 bits
+- Flow Control: RTS/CTS (if board doesn't support then use XON/XOFF)
+
+# 5. Services
+## 5.1 Network Services
+### 5.1.1 Network Capture
+This command should force the server to hold a capture of nodes and links.
+
+Command Message
+| Field | Content | Description |
+| :----  | :------- | :----------- |
+| AF | COMMAND_FRAME | Set frame as command frame |
+| Command | NWK_CAPTURE | Network Capture Request |
+
+Response Message
+| Field | Content | Description |
+| :----  | :------- | :----------- |
+| Status | Status byte | see appendix |
+| Response[0] | Capture Status | 0x00: START Capture <br> Else this indicates a problem |
+
+### 5.1.2 Node Discovery
+This command is used to discover a new node in the captured network, if all nodes are discovered then it returns `END_OF_CAPTURED_NODES`.
+
+
+Command Message
+| Field | Content | Description |
+| :----  | :------- | :----------- |
+| AF | COMMAND_FRAME | Set frame as command frame |
+| Command | NWK_DISCOVER | Network Discovery Request |
+
+Response Message
+<div class="node-disc-table">
+
+| Field | Content | Description |
+| :----  | :------- | :----------- |
+| Status | Status byte | see appendix |
+| Response[0..1] | Network Address of Node or `END_OF_CAPTURED_NODES` | 16-bit integer |
+| Response[2..11] | MAC Address of Node | 64-bit integer |
+| Response[12] | Logical Type of Node | 0x00: Coordinator <br> 0x01: Router <br> 0x02: End Device |
+| Response[13..14] | Parent Network Address of Node | 16-bit integer |
+
+</div>
+
+
+### 5.1.3 Link Query
+
+Command Message
+| Field | Content | Description |
+| :----  | :------- | :----------- |
+| AF | COMMAND_FRAME | Set frame as command frame |
+| Command | LINK_DISCOVER | Link Discovery Request |
+
+Response Message
+<div class="node-disc-table">
+
+| Field | Content | Description |
+| :----  | :------- | :----------- |
+| Status | Status byte | see appendix |
+| Response[0..1] | Network Address of First Node or `END_OF_CAPTURED_LINKS` | 16-bit integer |
+| Response[2..3] | Network Address of Second Node | 16-bit integer |
+| Response[4] | Income Cost of Link | Ranges from 0 to 7 |
+| Response[5] | Outcome Cost of Link | Ranges from 0 to 7 |
+
+</div>
+
+
+
+
+<style>
+    .node-disc-table tr:nth-child(3) { background: gray;}
+    .node-disc-table tr:nth-child(4) { background: gray;}
+    .node-disc-table tr:nth-child(5) { background: gray;}
+</style>
 
 
