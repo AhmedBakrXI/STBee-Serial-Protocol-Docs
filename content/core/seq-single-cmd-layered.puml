@@ -30,7 +30,7 @@ else #Pink not end
     server_dtl -> server_dtl: wait for other octets 
 end
 
-server_cmd -> server_cmd: Execute the process
+{start_timer2} server_cmd -> server_cmd: Execute the process
 server_cmd -> server_dtl: send response
 server_dtl -> server_dtl: Encapsulate Message Using SLIP
 server_dtl -> server_phy: Send Encapsulated Message
@@ -52,11 +52,11 @@ client_cmd -> client_cmd: Stop Timer
 client_cmd -> client_cmd: Parse Response to DTO
 
 alt#Gold #LightBlue Successful Parsing
-    client_cmd --> server_cmd: Send ACK + Command ID
+    {end_timer2} client_cmd --> server_cmd: Send ACK + Command ID
 else #Pink Failure
     client_cmd --> server_cmd: Send RESEND + Command ID
 end
 
-{start_timer} <-> {end_timer}: Ticking
-
+{start_timer} <-> {end_timer}: Client Ticking
+{start_timer2} <-> {end_timer2}: Server Ticking
 @enduml
