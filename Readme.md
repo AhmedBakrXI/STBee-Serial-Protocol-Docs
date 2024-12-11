@@ -47,7 +47,7 @@ Zero for device commands and one otherwise.
 Contains two bits to support four levels of priority. Server should handle higher priority commands before lower ones.
 
 ### 2.2.6 Command
-This field contains 8 bits to support up to 256 commands.
+This field contains 8 bits to support up to 256 commands for network and same for device.
 
 ### 2.2.7 Payload
 This field contains any parameters sent by application layer and has maximum size of 300 bytes.
@@ -70,12 +70,30 @@ This field contains the response to the command sent.
 
 
 ## 2.4 Diagrams
+### 2.4.1 Layered diagram
+<img src="out/content/core/seq-single-cmd-layered/Single Command Execution - Success Case.svg">
+
+### 2.4.2 Multiple Requests All Success Case
+<img src="out/content/core/seq-multiple-cmds-hl/Multiple Commands.svg">
+
+### 2.4.3 Multiple Requests Timeout Case
+<img src="out/content/core/seq-multiple-cmds-timeout/Multiple Commands.svg">
+
+### 2.4.4 Single Command Duplicate ACK
+<img src="out/content/core/seq-single-cmd-dup-ok/Single Commands.svg">
+
+### 2.4.5 Single Command ACK MISS
+<img src="out/content/core/seq-single-resp-miss-ack/Single Commands.svg">
+
+### 2.4.6 Single Corrupted Command
+<img src="out/content/core/seq-send-single-corrupted-command/Single Commands.svg">
+
+### 2.4.7 Single Command Corrupted Response
+<img src="out/content/core/seq-single-resp-corrupted/Single Commands.svg">
+
 
 ## 2.5 Entities
 <img src="images/command-entities.png">
-
-
-`حط الصور يااااااااااض يا أبو حياة`
 
 # 3. Data Transfer Layer (DTL)
 
