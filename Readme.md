@@ -1,6 +1,56 @@
 # STBee Serial Protocol
 
+
 # Table of Contents
+<details>
+<summary></summary>
+
+- [1. Introduction](#1-introduction)
+  * [1.1 Overview](#11-overview)
+- [2. Command Layer Communication](#2-command-layer-communication)
+  * [2.1 CRA Frame](#21-cra-frame)
+  * [2.2 Command Format](#22-command-format)
+    + [2.2.1 Unique Identifier](#221-unique-identifier)
+    + [2.2.2 Reserved](#222-reserved)
+    + [2.2.3 Acknowledge Flag (AF)](#223-acknowledge-flag--af-)
+    + [2.2.4 Device or Network (DEV/NWK)](#224-device-or-network--dev-nwk-)
+    + [2.2.5 Priority](#225-priority)
+    + [2.2.6 Command](#226-command)
+    + [2.2.7 Payload](#227-payload)
+- [2.3 Response Format](#23-response-format)
+    + [2.3.1 Unique Identifier](#231-unique-identifier)
+    + [2.3.2 Status](#232-status)
+    + [2.3.3 Response](#233-response)
+  * [2.4 Diagrams](#24-diagrams)
+    + [2.4.1 Layered diagram](#241-layered-diagram)
+    + [2.4.2 Multiple Requests All Success Case](#242-multiple-requests-all-success-case)
+    + [2.4.3 Multiple Requests Timeout Case](#243-multiple-requests-timeout-case)
+    + [2.4.4 Single Command Duplicate ACK](#244-single-command-duplicate-ack)
+    + [2.4.5 Single Command ACK MISS](#245-single-command-ack-miss)
+    + [2.4.6 Single Corrupted Command](#246-single-corrupted-command)
+    + [2.4.7 Single Command Corrupted Response](#247-single-command-corrupted-response)
+    + [2.4.8 Client State Diagram](#248-client-state-diagram)
+    + [2.4.9 Server State Diagram](#249-server-state-diagram)
+  * [2.5 Entities](#25-entities)
+- [3. Data Transfer Layer (DTL)](#3-data-transfer-layer--dtl-)
+  * [3.1 DTL Packet Format](#31-dtl-packet-format)
+    + [3.1.1 CRC Enable (CRC EN)](#311-crc-enable--crc-en-)
+    + [3.1.2 Reserved](#312-reserved)
+    + [3.1.3 Payload](#313-payload)
+    + [3.1.4 CRC 16](#314-crc-16)
+    + [3.1.5 SLIP Wrapper](#315-slip-wrapper)
+  * [3.2 Entities](#32-entities)
+- [4. Physical Layer](#4-physical-layer)
+- [5. Services](#5-services)
+  * [5.1 Network Services](#51-network-services)
+    + [5.1.1 Network Capture](#511-network-capture)
+    + [5.1.2 Node Discovery](#512-node-discovery)
+    + [5.1.3 Link Query](#513-link-query)
+- [6. Appendix](#6-appendix)
+  * [ACK FRAME](#ack-frame)
+  * [STATUS Byte](#status-byte)
+
+</details>
 
 # 1. Introduction
 
@@ -91,6 +141,11 @@ This field contains the response to the command sent.
 ### 2.4.7 Single Command Corrupted Response
 <img src="out/content/core/seq-single-resp-corrupted/Single Commands.svg">
 
+### 2.4.8 Client State Diagram
+<img src="out/content/client/state/Client State Diagram.svg">
+
+### 2.4.9 Server State Diagram
+<img src="out/content/server/state/Server State Diagram.svg">
 
 ## 2.5 Entities
 <img src="images/command-entities.png">
@@ -200,7 +255,14 @@ Response Message
 </div>
 
 
+# 6. Appendix
+## ACK FRAME
+| Field | Content | Description |
+| :---- | :------ | :---------- |
+| AF    | ACK_FLAG_ON | Set to 1 |
+| Command | ACK_FRAME_ACTION | The action that should be done after receiving the ACK frame |
 
+## STATUS Byte
 
 <style>
     .node-disc-table tr:nth-child(3) { background: gray;}
