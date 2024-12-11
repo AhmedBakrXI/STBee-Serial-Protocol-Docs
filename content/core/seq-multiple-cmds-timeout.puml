@@ -23,12 +23,13 @@ client -> client: Process Response
 
 server -> server: Process [ID=01, PRIORITY=APP, COMMAND]
 
-{start4} client -[#blue]-> client: Timeout ID=01
+{start4} client -[#red]-> client: Timeout ID=01
 client -> server: RESEND ID=01
 
 {end4} server -> client: Send [ID=01, Response]
+client -> server: OK ID=01
 
-{start1} -[#blue]-> {start4}: timer 1
+{start1} <-> {start4}: timer 1
 {start2} <-> {end2}: timer 2
 {start3} <-> {end3}: timer 3
 {start4} <-> {end4}: timer 1

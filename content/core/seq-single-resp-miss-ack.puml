@@ -10,8 +10,9 @@ client -> server: Request [ID=01, PRIORITY=APP, COMMAND]
 
 server -> server: Process [ID=01, PRIORITY=USER, COMMAND]
 {start1} server -> client: Send [ID=01, Response]
-{end1} client -> client: Process Response
+client -> client: Process Response
 
+{end1} server -> server: timeout with no ACK
 server -> client: Resend [ID=01, Response]
 client -> server: OK ID=01
 

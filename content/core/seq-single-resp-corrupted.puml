@@ -12,7 +12,7 @@ server -> server: Process [ID=01, PRIORITY=USER, COMMAND]
 server -> client: Send [ID=01, Response]
 client -> client: Process Response
 client -> client: Corrupted Response
-client -> server: Request Resend 01
+client -> server: Request Resend ID=01
 
 server -> client: Resend [ID=01, Response]
 client -> server: OK ID=01

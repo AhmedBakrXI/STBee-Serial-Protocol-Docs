@@ -7,9 +7,9 @@ entity client_dtl as "Client Data Transfer Layer"
 entity client_phy as "Client Physical Layer"
 
 
-entity server_phy as "Client Physical Layer"
-entity server_dtl as "Client Data Transfer Layer"
-entity server_cmd as "Client Command Layer"
+entity server_phy as "Server Physical Layer"
+entity server_dtl as "Server Data Transfer Layer"
+entity server_cmd as "Server Command Layer"
 
 
 client_cmd -> client_dtl: Send Command + Command ID + Priority

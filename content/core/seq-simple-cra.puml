@@ -1,0 +1,13 @@
+@startuml "Simple CRA Flow"
+
+title "Simple CRA Flow"
+skinparam style strictuml
+
+client->(20)server++: Command
+server-->(20)client--: Response
+activate client
+client->(20)server++: Acknowledge
+deactivate client
+
+server->server: Close CRA
+@enduml
