@@ -263,6 +263,13 @@ Response Message
 | Command | ACK_FRAME_ACTION | The action that should be done after receiving the ACK frame |
 
 ## STATUS Byte
+| Name | Value | Description |
+| :--- | :---- | :---------- |
+| STATUS_OK | 0x00 | Successful Operation |
+| STATUS_ERROR | 0x01 | Operation Error |
+| STATUS_CMD_NOT_SUPPORTED | 0x02 | Operation Not Supported |
+| STATUS_WRONG_PARAMETER | 0x03 | Invalid Parameter |
+| STATUS_TIMEOUT | 0x04 | Operation Timeout |
 
 <style>
     .node-disc-table tr:nth-child(3) { background: gray;}
